@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Document</title>
+  <link rel="stylesheet" href="/node_modules/bootstrap/dist/css/bootstrap.css">
+  <link rel="stylesheet" href="/public/css/login.css">
+</head>
+
+<body>
+  <div class="main">
+    <div class="header">
+      <a href="/">
+        <img src="/public/img/logo3.png" alt="">
+      </a>
+      <h1>用户注册</h1>
+    </div>
+
+    <form id="register_form" method="post" action="/register">
+      <div class="form-group">
+        <label for="email">邮箱</label>
+        <input type="email" class="form-control" id="email" name="email" placeholder="Email" autofocus>
+      </div>
+      <div class="form-group">
+        <label for="nickname">昵称</label>
+        <input type="text" class="form-control" id="nickname" name="nikename" placeholder="Nickname">
+      </div>
+      <div class="form-group">
+        <label for="password">密码</label>
+        <input type="password" class="form-control" id="password" name="password" placeholder="Password">
+      </div>
+      <button type="submit" class="btn btn-success btn-block">注册</button>
+    </form>
+    <div class="message">
+      <p>已有账号? <a href="/login">点击登录</a>.</p>
+    </div>
+  </div>
+  <script src="/node_modules/jquery/dist/jquery.js"></script>
+  <script>
+
+    //触发form表单中的submit提交按钮
+    $('#register_form').on("submit",function (e) {
+        e.preventDefault();// 阻止默认事件
+        console.log($(this).serialize());
+        var data = $(this).serialize();
+
+        $.ajax({
+            url:'/register',
+            type:'post',
+            data:data,
+            dataType:'json',
+            success: function (data) {
+                console.log(data);
+                if(data.statusCode == 1000){
+                    alert(data.message); //说明已存在
+                }else if(data.success){
+                    alert(data.message);// 说明注册成功
+                    location.href = '/';//跳到首页
+
+                }else if(data.statusCode === 1005){
+                    alert(data.message);// 说明服务器繁忙
+                }
+            }
+        })
+    } )
+
+    /*
+    * 使用cookie来保存登录的相关信息  推荐使用express-session工具来保存
+    * 1. npm i express-session
+    * 2. 导入并配置
+    *
+    *
+    * */
+
+
+  </script>
+</body>
+
+</html>
+
